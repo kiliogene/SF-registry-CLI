@@ -98,10 +98,13 @@ export default class RegistryDeploy extends SfCommand<void> {
     const checks = Array.from(resources).map(async (resName) => {
       const resourceDir = path.join(this.projectRoot, PATHS.STATIC_RESOURCES);
       const metaFile = path.join(resourceDir, `${resName}.resource-meta.xml`);
-      if (!(await findStaticResourceFileAsync(resourceDir, resName))) {
+      const resourceFileFound = await findStaticResourceFileAsync(resourceDir, resName);
+      const metaFileFound = await fileExistsAndIsFile(metaFile);
+      if (!resourceFileFound) {
         throw new Error(`Ressource statique "${resName}" référencée mais introuvable.`);
       }
-      if (!(await fileExistsAndIsFile(metaFile))) {
+      
+      if (!metaFileFound) {
         throw new Error(`Fichier .resource-meta.xml manquant pour la ressource statique "${resName}".`);
       }
     });

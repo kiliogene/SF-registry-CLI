@@ -104,7 +104,8 @@ export default class RegistryDownload extends SfCommand<void> {
   private async handleStaticResources(tmpExtractPath: string, targetDirectory: string): Promise<void> {
     try {
       const staticResExtracted = path.join(tmpExtractPath, 'staticresources');
-      if (!(await fileExists(staticResExtracted))) {
+      const sourceDirectoryExists = await fileExists(staticResExtracted);
+      if (!sourceDirectoryExists) {
         return;
       }
       const staticResTarget = path.join(targetDirectory, 'staticresources');
